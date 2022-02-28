@@ -16,7 +16,6 @@ You need a python (3.x) environment with the following modules installed:
 # How to execute
 You can proceed with either of the following:
 
-- Interactively execute the jupyter notebook located at `scripts/summit.ipynb` using binder (click on "launch binder" badge above). No installation is required.  Note that building the binder image and launching the server may take up to 2 minutes.
+- **Recommended**: Interactively execute the jupyter notebook located at `scripts/summit.ipynb` using binder (click on "launch binder" badge above). No installation is required.  Note that building the binder image and launching the server may take up to 2 minutes.
 - Read the notebook as an HTML from `scripts/summit.html`. No installation is required but you may need to download the html file and open it in your browser if Github doesn't load it.
-- Make a python environment with the dependencies mentioned above and run either `scripts/summit.py` script or open `summit.ipynb` notebook. To do so, simply clone the repo, navigate in, and execute `pip install -r requirements.txt` in your terminal).
- 
+- **Not Recommended**: First, make a python environment with the dependencies mentioned above. To do so, simply clone the repo, navigate in, and execute `pip install -r requirements.txt` in your terminal. Then, run either `scripts/summit.py` script or open `summit.ipynb` notebook. *This method installs packages on your default python environment, which is likely undesireable*.
