@@ -1,17 +1,22 @@
-# 2nd DBS Expert Summit
-scripts for the poster result reproduction. 
-
-# How to run
-You can run either the `summit.py` or`summit.ipynb` from the `/scripts` directory. Alternatively, you may view the executed jupyter notebook, as an HTML file from [here](https://github.com/arashgmn/dbs-expert-summit/blob/main/scripts/summit.html) or run the notebook interactively without any local installtions using the  binder image (click on the badge below):
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/arashgmn/dbs-expert-summit/HEAD)
 
-**Note**: Building the binder image and launching the server may take up to 1-2 minutes. After the server launch navigate to `scripts/` and open `summit.ipynb`.
+# 2nd DBS Expert Summit
+scripts for the poster result reproduction. 
 
 # Dependencies
 You need a python (3.x) environment with the following modules installed:
 - numpy
 - scipy
+- [sdeint](https://github.com/mattja/sdeint): Stochastic systems for noisy inputs are implemented, but we have not used them in this work. Thus, can be commented out in the source code.
 - matplotlib
 - seaborn (optional)
-- [sdeint](https://github.com/mattja/sdeint): Stochastic systems for noisy inputs are implemented, but we have not used them in this work. Thus, can be commented out in the source code.
+- jupyter (optional)
+
+# How to execute
+You can proceed with either of the following:
+
+- Interactively execute the jupyter notebook located at `scripts/summit.ipynb` using binder (click on "launch binder badge above). No installation is required.  Note that building the binder image and launching the server may take up to 2 minutes.
+- Read the notebook as an HTML from `scripts/summit.html`. No installation is required but you may need to download the html file and open it in your browser if Github doesn't load it.
+- Make a python environment with the dependencies mentioned above and run either `scripts/summit.py` script or open `summit.ipynb` notebook. To do so, simply clone the repo, navigate in, and execute `pip install -r requirements.txt` in your terminal).
+ 
