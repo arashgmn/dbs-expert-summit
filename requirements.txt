@@ -3,4 +3,4 @@ scipy
 sdeint
 matplotlib
 seaborn==0.11.2
-
+jupyter
