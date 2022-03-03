@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# <h1>Table of Contents<span class="tocSkip"></span></h1>
+# <div class="toc"><ul class="toc-item"><li><span><a href="#Short-Intro-about-archs-and-mass-files" data-toc-modified-id="Short-Intro-about-archs-and-mass-files-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Short Intro about <code>archs</code> and <code>mass</code> files</a></span></li><li><span><a href="#Reproduction-of-van-Albada-&amp;-Robinson-2009" data-toc-modified-id="Reproduction-of-van-Albada-&amp;-Robinson-2009-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Reproduction of van Albada &amp; Robinson 2009</a></span></li><li><span><a href="#Model-response-types" data-toc-modified-id="Model-response-types-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Model response types</a></span><ul class="toc-item"><li><span><a href="#Oscillatory-(single-mode)" data-toc-modified-id="Oscillatory-(single-mode)-3.1"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Oscillatory (single mode)</a></span></li><li><span><a href="#oscillatory-response-(higher-modes)" data-toc-modified-id="oscillatory-response-(higher-modes)-3.2"><span class="toc-item-num">3.2&nbsp;&nbsp;</span>oscillatory response (higher modes)</a></span></li><li><span><a href="#Choatic-response" data-toc-modified-id="Choatic-response-3.3"><span class="toc-item-num">3.3&nbsp;&nbsp;</span>Choatic response</a></span></li></ul></li><li><span><a href="#Parameter-sweep-and-Beta-power-ratio" data-toc-modified-id="Parameter-sweep-and-Beta-power-ratio-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Parameter sweep and Beta power ratio</a></span></li></ul></div>
+
 # In[1]:
 
 
@@ -425,7 +428,7 @@ W_n = W0.copy()
 W_p, configs_p = parkinsonian_maker('V', np.array(W_n), configs_n) #full parkinsonian
 
 
-# In[25]:
+# In[ ]:
 
 
 tau_r = configs0['STN']['tau_r']
@@ -439,6 +442,14 @@ outs_p = []
 t0 = 0 
 dur= 3
 dt = 2.5e-3
+
+
+# In[21]:
+
+
+# This chunk takes a good 20 mins to finish. You may want to comment it and
+# load the already saved results in the following cell
+
 for i, tau in enumerate(tau_ds):
     for pop in configs_n.keys():
         configs_n[pop]['tau_d'] = tau
@@ -459,9 +470,19 @@ for i, tau in enumerate(tau_ds):
     outs_p.append(extract_v(net_p, out_p))
     
     print('i={} finished in {} seconds.\n'.format(i,round(time.time()-start,3)))
+    
+np.save('out_n.npy',np.array(out_n))
+np.save('out_p.npy',np.array(out_p))
 
 
-# In[26]:
+# In[27]:
+
+
+out_n = np.load('out_n.npy', allow_pickle=True)
+out_p = np.load('out_p.npy', allow_pickle=True)
+
+
+# In[29]:
 
 
 fs = 1./dt
@@ -478,34 +499,33 @@ for i in range(len(tau_ds)):
         pow_p = psd_p[cond].sum()
         
         ratios[i,pop] = pow_p/pow_n
+np.save('ratios.npy', ratios)
 
 
-# In[28]:
-
-
-# np.save('ratios.npy', ratios)
-ratios = np.load('ratios.npy')
-
-
-# In[29]:
+# In[30]:
 
 
 # plot_power_ratio(ratios, net, tau_ds, boolean=True)
+plt.figure(figsize=(8.5,5))
 l = plt.imshow(np.log(ratios).T, interpolation='None',
                cmap='seismic', vmin=-.2, vmax=.2 ,)
-plt.colorbar(l, extend='both', location='top', ticks=[])
+
+cbar = plt.colorbar(l, location='right', ticks=[], pad=0.02)
 plt.axis('tight')
-plt.yticks(ticks=range(min(ratios.shape)), labels=net.pop_names);
-plt.xticks(ticks=range(0,100,20), labels=[0, 2e-2, 4e-2, 6e-2, 8e-2])
-plt.xlabel(r'$\tau_d$ [s]')
+
+plt.yticks(ticks=range(min(ratios.shape)), labels=net.pop_names,
+           fontsize='x-large');
+plt.xticks(ticks=range(0,100,20), labels=[0, 2e-2, 4e-2, 6e-2, 8e-2],
+          fontsize='large')
+plt.xlabel(r'$\tau_d$ [s]',fontsize='x-large')
 plt.vlines(14, -1, 10, linestyle= '--', color='w')
-# plt.xlim(-1, 99)
-# plt.savefig('00-beta_ratio_wrong.png',dpi=300, bbox_inches='tight')
+
+plt.savefig('p-conformal-all.jpg',bbox_inches='tight',dpi=300)
 
 
 # Note the that for STN for instance, there are periods of high beta ratio and low beta ratio. Also for GPe/GPi, at very large decay tiemscales, such periodic windows appear too. Let's look at these high beta power windows of STN and see how the PSD looks like in the beta range. 
 
-# In[30]:
+# In[31]:
 
 
 slc = net_n.t>0.5
@@ -526,7 +546,7 @@ for case in [22, 39, 60]: # the window centers (roughly)
     print('For tau_d = {} the ratio is {}.'.format(tau_ds[case], pow_p/pow_n))
 
 plt.plot([],[], 'k', label='healthy')
-plt.plot([],[], 'k--', label='Parkinsonian')
+plt.plot([],[], 'k--', label='parkinsonian')
 plt.legend(fontsize='x-large')
 
 plt.yscale('linear')
@@ -535,5 +555,12 @@ plt.ylim(0,6e-4)
 
 plt.xlabel('Frequency [Hz]',fontsize='large')
 plt.ylabel('Power Spectrum [arb. unit.]',fontsize='large');
-# plt.savefig('more_beta.jpg',dpi=300, bbox_inches='tight')
+
+plt.savefig('p-conformal.jpg',bbox_inches='tight',dpi=300)
+
+
+# In[ ]:
+
+
+
 
